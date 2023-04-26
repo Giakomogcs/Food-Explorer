@@ -1,6 +1,6 @@
 const AppError = require("../utils/AppError")
 const sqliteConnection = require('../database/sqlite')
-const {hash} = require("bcrypt")
+const {hash,compare} = require("bcrypt")
 
 class UsersController{
   async create(request,response){
@@ -22,7 +22,8 @@ class UsersController{
   }
 
   async update(request,response){
-    const {name, email, password, isAdmin} = request.body
+    const {name, email, password, old_password, isAdmin} = request.body
+    
     const {id} = request.params
 
     const database = await sqliteConnection()
@@ -37,16 +38,35 @@ class UsersController{
     if(userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id){
       throw new AppError("Este e-mail já está em uso")
     }
-    user.name = name
-    user.email = email
+
+    user.name = name ?? user.name
+    user.email = email ?? user.email
+    user.isAdmin = isAdmin ?? user.isAdmin
+
+    if (password && !old_password){
+      throw new AppError("Você precisa informar a senha antiga para alterar a senha.")
+    }
+
+    if (password && old_password){
+      const checkOlddPassword = await compare(old_password, user.password)
+
+      if(!checkOlddPassword){
+        throw new AppError("A senha antiga não confere")
+      }
+
+      user.password = await hash(password,8)
+    }
+
 
     await database.run(`
       UPDATE users SET
       name = ?,
       email = ?,
-      updated_at = ?
+      password = ?,
+      isAdmin = ?,
+      updated_at = DATETIME('now')
       WHERE id = ?`,
-      [user.name, user.email, new Date(), id]
+      [user.name, user.email, user.password, user.isAdmin, id]
     )
 
     return response.status(200).json("Atualizado com sucesso!")
