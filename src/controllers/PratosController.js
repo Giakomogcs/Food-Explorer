@@ -25,5 +25,16 @@ class PratosController{
 
     response.json()
   }
+
+  async show(request,response){
+    const {id} = request.params
+    const prato = await knex("pratos").where({id}).first()
+    const Ingredients = await knex("Ingredients").where({prato_id: id}).orderBy("name")
+
+    return response.json({
+      ...prato,
+      Ingredients
+    })
+  }
 }
 module.exports = PratosController
