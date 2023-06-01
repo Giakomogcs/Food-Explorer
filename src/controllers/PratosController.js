@@ -23,7 +23,7 @@ class PratosController{
 
     await knex("Ingredients").insert(IngredientsInsert)
 
-    response.json("Prato criado com sucesso!")
+    return response.json("Prato criado com sucesso!")
   }
 
   async show(request,response){
