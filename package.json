@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
-    "migrate" : "npx knex migrate:latest"
+    "migrate": "npx knex migrate:latest"
   },
   "keywords": [],
   "author": "Giovani Costa Silva",
@@ -15,6 +15,7 @@
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.0",
     "knex": "^2.4.2",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.6"
