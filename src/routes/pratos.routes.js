@@ -10,6 +10,7 @@ const pratosController = new PratosController()
 pratosRoutes.use(ensureAuthenticated)
 
 pratosRoutes.post("/", pratosController.create)
+pratosRoutes.put("/:id", pratosController.update)
 pratosRoutes.get("/:id", pratosController.show)
 pratosRoutes.get("/", pratosController.index)
 pratosRoutes.delete("/:id", pratosController.delete)

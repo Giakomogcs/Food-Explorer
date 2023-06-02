@@ -26,6 +26,50 @@ class PratosController{
     return response.json("Prato criado com sucesso!")
   }
 
+  async update(request,response){
+    let {name, category, price, description, Ingredients} = request.body
+    const {id} = request.params
+    console.log(id)
+
+    const updated_at = Date.now()
+
+    const prato = await knex.select("name", "category", "price", "description").from("pratos").where("id", id)
+    console.log(prato)
+
+    name = name ?? prato.name
+    category = category ?? prato.category
+    price = price ?? prato.price
+    description = description ?? prato.description
+
+    console.log(name)
+    console.log(category)
+    console.log(price)
+    console.log(description)
+
+
+    await knex.update({
+      name,
+      category,
+      price,
+      description,
+      updated_at
+    }).where("id", id)
+
+    console.log("Fiz upgrade")
+
+    const IngredientsInsert = Ingredients.map(name => {
+      return {
+        prato_id,
+        name,
+        updated_at
+      }
+    })
+
+    await knex("Ingredients").update(IngredientsInsert).where("id", id)
+
+    return response.status(200).json("Atualizado com sucesso!")
+  }
+
   async show(request,response){
     const {id} = request.params
     const prato = await knex("pratos").where({id}).first()
