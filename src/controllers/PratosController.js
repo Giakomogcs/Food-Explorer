@@ -1,4 +1,5 @@
 const knex = require("../database/knex")
+const sqliteConnection = require('../database/sqlite')
 
 class PratosController{
   async create(request,response){
@@ -29,43 +30,44 @@ class PratosController{
   async update(request,response){
     let {name, category, price, description, Ingredients} = request.body
     const {id} = request.params
-    console.log(id)
+    const prato_id = id
 
-    const updated_at = Date.now()
+    const user_id = request.user.id
 
-    const prato = await knex.select("name", "category", "price", "description").from("pratos").where("id", id)
-    console.log(prato)
+    const database = await sqliteConnection()
+    const prato = await database.get("SELECT * FROM pratos WHERE id = (?)", [id])
 
-    name = name ?? prato.name
-    category = category ?? prato.category
-    price = price ?? prato.price
-    description = description ?? prato.description
+    if(!prato){
+      throw new AppError("Usuário não encontrado")
+    }
 
-    console.log(name)
-    console.log(category)
-    console.log(price)
-    console.log(description)
+    prato.name = name ?? prato.name
+    prato.category = category ?? prato.category
+    prato.price = price ?? prato.price
+    prato.description = description ?? prato.description
 
+    await database.run(`
+      UPDATE pratos SET
+      name = ?,
+      category = ?,
+      price = ?,
+      description = ?,
+      updated_at = DATETIME('now')
+      WHERE id = ?`,
+      [prato.name, prato.category, prato.price, prato.description, id]
+    )
 
-    await knex.update({
-      name,
-      category,
-      price,
-      description,
-      updated_at
-    }).where("id", id)
-
-    console.log("Fiz upgrade")
+    await knex("Ingredients").where("prato_id",id).delete()
 
     const IngredientsInsert = Ingredients.map(name => {
       return {
-        prato_id,
         name,
-        updated_at
+        user_id,
+        prato_id
       }
     })
 
-    await knex("Ingredients").update(IngredientsInsert).where("id", id)
+    await knex("Ingredients").insert(IngredientsInsert)
 
     return response.status(200).json("Atualizado com sucesso!")
   }
