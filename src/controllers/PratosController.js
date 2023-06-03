@@ -29,13 +29,12 @@ class PratosController{
 
   async update(request,response){
     let {name, category, price, description, Ingredients} = request.body
-    const {id} = request.params
-    const prato_id = id
+    const {prato_id} = request.params
 
     const user_id = request.user.id
 
     const database = await sqliteConnection()
-    const prato = await database.get("SELECT * FROM pratos WHERE id = (?)", [id])
+    const prato = await database.get("SELECT * FROM pratos WHERE id = (?)", [prato_id])
 
     if(!prato){
       throw new AppError("Usuário não encontrado")
@@ -54,10 +53,10 @@ class PratosController{
       description = ?,
       updated_at = DATETIME('now')
       WHERE id = ?`,
-      [prato.name, prato.category, prato.price, prato.description, id]
+      [prato.name, prato.category, prato.price, prato.description, prato_id]
     )
 
-    await knex("Ingredients").where("prato_id",id).delete()
+    await knex("Ingredients").where("prato_id", prato_id).delete()
 
     const IngredientsInsert = Ingredients.map(name => {
       return {
