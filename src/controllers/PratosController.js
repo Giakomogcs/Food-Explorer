@@ -88,6 +88,8 @@ class PratosController{
 
     let pratos;
 
+    console.log(name)
+
     if(Ingredients){
       const filterIngredients = Ingredients.split(',').map(ingredient => ingredient.trim())
 
@@ -101,6 +103,7 @@ class PratosController{
         .whereLike("pratos.name", `%${name}%`)
         .whereIn("Ingredients.name",filterIngredients)
         .innerJoin("pratos", "pratos.id", "Ingredients.prato_id")
+        .groupBy("pratos.id")
         .orderBy("pratos.name")
 
     } else {
