@@ -24,11 +24,11 @@ class PratosController{
 
     await knex("Ingredients").insert(IngredientsInsert)
 
-    return response.json("Prato criado com sucesso!")
+    return response.json({id: prato_id})
   }
 
   async update(request,response){
-    let {name, category, price, description, Ingredients} = request.body
+    let {name, category, price, description, Ingredients, picture} = request.body
     const {prato_id} = request.params
 
     const user_id = request.user.id
@@ -44,6 +44,12 @@ class PratosController{
     prato.category = category ?? prato.category
     prato.price = price ?? prato.price
     prato.description = description ?? prato.description
+    prato.picture = picture ?? prato.picture
+    
+    console.log(prato.name)
+    console.log(prato.category)
+    console.log(prato.description)
+    console.log(prato.picture)
 
     await database.run(`
       UPDATE pratos SET
@@ -51,9 +57,10 @@ class PratosController{
       category = ?,
       price = ?,
       description = ?,
+      picture = ?,
       updated_at = DATETIME('now')
       WHERE id = ?`,
-      [prato.name, prato.category, prato.price, prato.description, prato_id]
+      [prato.name, prato.category, prato.price, prato.description, prato.picture, prato_id]
     )
 
     await knex("Ingredients").where("prato_id", prato_id).delete()
