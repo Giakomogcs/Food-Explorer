@@ -91,14 +91,15 @@ class PratosController{
 
   async index(request, response){
     const {name, Ingredients} = request.query
-    const user_id = request.user.id
+    const user_id = 1
+    //const user_id = request.user.id
 
     let pratos;
 
-    console.log(name)
-
+    
     if(Ingredients){
       const filterIngredients = Ingredients.split(',').map(ingredient => ingredient.trim())
+      console.log(filterIngredients)
 
       pratos = await knex("Ingredients")
         .select([
