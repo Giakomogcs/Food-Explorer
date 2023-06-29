@@ -99,7 +99,7 @@ class PratosController{
     
     if(Ingredients){
       const filterIngredients = Ingredients.split(',').map(ingredient => ingredient.trim())
-      console.log(filterIngredients)
+      //console.log(filterIngredients)
 
       pratos = await knex("Ingredients")
         .select([
