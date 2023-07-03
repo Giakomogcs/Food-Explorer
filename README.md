@@ -13,8 +13,13 @@ O **admin** é a pessoa responsável pelo restaurante, logo, poderá criar, visu
 
 O **usuário** irá visualizar todos os pratos cadastrados e, quando clicar em um prato, será redirecionado para uma nova tela com informações mais detalhadas sobre ele.
 
- 
+## Deploy
 
+O link do deploy é:
+
+```bash
+  URL
+```
 
 ## Start
 
