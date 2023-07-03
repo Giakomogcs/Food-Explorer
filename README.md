@@ -130,3 +130,8 @@ Instale o projeto com npm
 | :---------- | :--------- | :------------------------------------------ |
 | `picture_path`      | `string` | **Obrigatório**. O PATH da imagem que você quer exibir|
 
+
+## Feedback
+
+Se você tiver algum feedback, por favor nos deixe saber por meio de giakomogcs@gmail.com
+
