@@ -18,7 +18,7 @@ O **usuário** irá visualizar todos os pratos cadastrados e, quando clicar em u
 O link do deploy é:
 
 ```bash
-  URL
+  https://foodexplorer-api-cjyi.onrender.com
 ```
 
 ## Start
