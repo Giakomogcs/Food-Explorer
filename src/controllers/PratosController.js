@@ -74,7 +74,6 @@ class PratosController{
     })
 
     await knex("Ingredients").insert(IngredientsInsert)
-
     return response.status(200).json("Atualizado com sucesso!")
   }
 
